@@ -1,7 +1,6 @@
 package com.thomasriotapi;
 
-import com.merakianalytics.orianna.Orianna;
-import com.merakianalytics.orianna.types.common.Region;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,18 +11,26 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+
+
+import java.awt.*;
+
+import static java.awt.Font.BOLD;
 
 public class Main extends Application {
 
     //javafx variables
     private TextField sumNameField;
     private final Insets insets = new Insets(10,10,10,10);
+    private final Label emptyLabel = new Label("");
     private ChoiceBox<String> regionMenu;
     private Label sumNameLabel;
+    private Label level;
 
     //riot variables
     String sumName;
@@ -41,25 +48,49 @@ public class Main extends Application {
         regionMenu = new ChoiceBox<>();
         regionMenu.getItems().addAll( "NA", "KR", "EUW", "EUNE", "LAN", "LAS", "OCE", "JP", "RU");
         regionMenu.setValue("Region");
-        //Image sumIcon = new Image();
         searchLayer.getChildren().addAll(regionMenu, sumNameField, submitButton);
 
 
 
         //RANK INFO LAYER NODE
-        VBox rankInfoLayer = new VBox();
-        rankInfoLayer.setSpacing(10);
+        HBox rankInfoLayer = new HBox();
+        rankInfoLayer.setSpacing(30);
         rankInfoLayer.setAlignment(Pos.TOP_CENTER);
         rankInfoLayer.setPadding(insets);
-        //Image rankImage = new Image();
+        //winrates
+        VBox winrateLayer = new VBox();
+        winrateLayer.setSpacing(10);
+        winrateLayer.setAlignment(Pos.CENTER_LEFT);
+        winrateLayer.setPadding(insets);
+        Label rankNodeLabel = new Label("Rank profile");
+        rankNodeLabel.setAlignment(Pos.TOP_LEFT);
+        rankNodeLabel.setFont(new Font("Consolas", 13));
+        rankNodeLabel.setStyle("-fx-font-weight: bold");
+        Label seasonWinrateLabel = new Label("Season winrate : ");
+        Label monthWinrateLabel = new Label("Month winrate : ");
+        winrateLayer.getChildren().addAll(rankNodeLabel, seasonWinrateLabel, monthWinrateLabel);
+        //middle summoner info layer
+        VBox middleLayer = new VBox();
+        middleLayer.setSpacing(10);
+        middleLayer.setAlignment(Pos.CENTER);
+        middleLayer.setPadding(insets);
         sumNameLabel = new Label();
-        Label rankLabel = new Label();
-        Label ladderLabel = new Label();
-        Label seasonWinrateLabel = new Label();
-        Label monthWinrateLabel = new Label();
-        Label seasonGamePlayed = new Label();
-        Label monthGamePlayed = new Label();
-        rankInfoLayer.getChildren().addAll(sumNameLabel, rankLabel, ladderLabel, seasonWinrateLabel, monthWinrateLabel, seasonGamePlayed, monthGamePlayed);
+        //Image rankImage = new Image();
+        //Image sumIcon = new Image();
+        level = new Label("Level : ");
+        Label rankLabel = new Label("Rank : ");
+        Label ladderLabel = new Label("Ladder : ");
+        middleLayer.getChildren().addAll(sumNameLabel, level, rankLabel, ladderLabel);
+        //game played layer
+        VBox gamesPlayedLayer = new VBox();
+        gamesPlayedLayer.setSpacing(10);
+        gamesPlayedLayer.setAlignment(Pos.CENTER_RIGHT);
+        gamesPlayedLayer.setPadding(insets);
+        Label seasonGamePlayed = new Label("Season games played : ");
+        Label monthGamePlayed = new Label("Month games played : ");
+        gamesPlayedLayer.getChildren().addAll(emptyLabel, seasonGamePlayed, monthGamePlayed);
+
+        rankInfoLayer.getChildren().addAll(winrateLayer, middleLayer, gamesPlayedLayer);
 
 
 
@@ -97,7 +128,7 @@ public class Main extends Application {
 
 
         //SCENE SETUP
-        Scene scene = new Scene(root,400,600, Color.SEAGREEN);
+        Scene scene = new Scene(root,600,600);
         //constants
         String SCENE_TITLE = "SCENE TITLE";
         stage.setTitle(SCENE_TITLE); //window title
@@ -110,8 +141,10 @@ public class Main extends Application {
         String id = OriannaHandler.getId(sumName,region);
         if (id == null || id.equals("")) {
             sumNameLabel.setText("No summoner found");
+
         } else {
-            sumNameLabel.setText(sumName);
+            sumNameLabel.setText(sumName.toUpperCase());
+            level.setText("Level : " + OriannaHandler.levelToString(sumName,region));
         }
     }
 

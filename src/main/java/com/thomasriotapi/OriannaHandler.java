@@ -7,11 +7,39 @@ public class OriannaHandler {
     public static String getId(String sumName, String regionString) {
         Orianna.setRiotAPIKey("RGAPI-2fe67864-45b5-41ff-a1e1-f81713861581");
 
-        Region region;
+        Region region = stringToRegion(regionString);
         Summoner summoner;
         String id = "";
 
-        region = switch (regionString) {
+        if (region != null && sumName != "" && sumName != null) {
+            summoner = Summoner.named(sumName).withRegion(region).get();
+            id = summoner.getId();
+        }
+
+        return id;
+    }
+
+    public static String levelToString(String sumName, String regionString) {
+        Region region = stringToRegion(regionString);
+        String s = "";
+        if (region != null && sumName != "" && sumName != null) {
+            Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+            int level = summoner.getLevel();
+            s += level;
+        }
+        return s;
+    }
+
+//    public static String getRank(String sumName, String regionString) {
+//        Region region = stringToRegion(regionString);
+//        if (region != null && sumName != "" && sumName != null) {
+//            Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+//
+//        }
+//    }
+
+    private static Region stringToRegion(String regionString) {
+        Region region = switch (regionString) {
             case "NA" -> Region.NORTH_AMERICA;
             case "KR" -> Region.KOREA;
             case "EUW" -> Region.EUROPE_WEST;
@@ -23,12 +51,6 @@ public class OriannaHandler {
             case "RU" -> Region.RUSSIA;
             default -> null;
         };
-        if (region != null) {
-            summoner = Summoner.named(sumName).withRegion(region).get();
-            id = summoner.getId();
-        }
-
-        return id;
+        return region;
     }
-
 }
