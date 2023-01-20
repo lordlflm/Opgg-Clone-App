@@ -2,10 +2,12 @@ package com.thomasriotapi;
 
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.*;
+import com.merakianalytics.orianna.types.core.championmastery.ChampionMasteries;
 import com.merakianalytics.orianna.types.core.league.League;
 import com.merakianalytics.orianna.types.core.league.LeagueEntry;
 import com.merakianalytics.orianna.types.core.league.LeaguePositions;
 import com.merakianalytics.orianna.types.core.match.MatchHistory;
+import com.merakianalytics.orianna.types.core.staticdata.Champion;
 import com.merakianalytics.orianna.types.core.staticdata.Image;
 import com.merakianalytics.orianna.types.core.staticdata.ProfileIcon;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
@@ -18,7 +20,11 @@ public class TestingOrianna {
         //
         //***this should work for match history//MatchHistory mh = MatchHistory.forSummoner(sum).withQueues(Queue.RANKED_SOLO).withSeasons(Season.getLatest()).get();
 
-        String icon = sum.getProfileIcon().getImage().getURL();
-        System.out.println(icon);
+        Object [] b = new Object[3];
+        Object [] a = sum.getChampionMasteries().toArray();
+        for (int i = 0; i<3; i++) {
+            b[i] = a[i];
+        }
+
     }
 }

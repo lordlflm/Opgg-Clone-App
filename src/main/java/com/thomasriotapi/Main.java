@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -55,7 +56,9 @@ public class Main extends Application {
         regionMenu.setValue("Region");
         searchLayer.getChildren().addAll(regionMenu, sumNameField, submitButton);
 
-
+        //title layer
+        /*HBox rankTitle = new HBox();
+        rankTitle.getChildren().addAll();*/
 
         //RANK INFO LAYER NODE
         HBox rankInfoLayer = new HBox();
@@ -74,15 +77,16 @@ public class Main extends Application {
         seasonWinrateLabel = new Label();
         monthWinrateLabel = new Label();
         winrateLayer.getChildren().addAll(rankNodeLabel, seasonWinrateLabel, monthWinrateLabel);
+
         //middle summoner info layer
         VBox middleLayer = new VBox();
-        middleLayer.setSpacing(10);
+        middleLayer.setSpacing(0);
         middleLayer.setAlignment(Pos.CENTER);
         middleLayer.setPadding(insets);
         sumNameLabel = new Label("Enter Summoner name and region");
         sumNameLabel.setAlignment(Pos.TOP_CENTER);
-
         //sum icon
+        StackPane imageStackPane = new StackPane();
         sumIconView = new ImageView();
         sumIconView.setFitHeight(60);
         sumIconView.setFitWidth(60);
@@ -90,16 +94,16 @@ public class Main extends Application {
         clip.setCenterX(30);
         clip.setCenterY(30);
         sumIconView.setClip(clip);
-
+        //rank icon
         rankImageView = new ImageView();
-        //Image rankImage = new Image();
-
-
-
+        rankImageView.setFitHeight(125);
+        rankImageView.setFitWidth(125);
+        imageStackPane.getChildren().addAll(sumIconView, rankImageView);
         level = new Label();
         rankLabel = new Label();
         Label ladderLabel = new Label();
-        middleLayer.getChildren().addAll(sumNameLabel, sumIconView, rankImageView, level, rankLabel, ladderLabel);
+        middleLayer.getChildren().addAll(sumNameLabel, level, imageStackPane, rankLabel, ladderLabel);
+
         //game played layer
         VBox gamesPlayedLayer = new VBox();
         gamesPlayedLayer.setSpacing(10);
@@ -149,7 +153,7 @@ public class Main extends Application {
         //SCENE SETUP
         Scene scene = new Scene(root,600,600);
         //constants
-        String SCENE_TITLE = "League of Legends java companion";
+        final String SCENE_TITLE = "League of Legends Java Companion";
         stage.setTitle(SCENE_TITLE); //window title
         //Image appIcon = new Image("some icon path");
         stage.setScene(scene);
@@ -161,18 +165,22 @@ public class Main extends Application {
         //no summoner found
         if (id == null || id.equals("")) {
             rankNodeLabel.setText("");
-            sumNameLabel.setText("No summoner found\nEnter summoner name and region");
+            sumNameLabel.setText("No summoner found");
             sumNameLabel.setTextFill(Color.RED);
-            level.setText("");
+            level.setText("Enter summoner name and region");
+            level.setTextFill(Color.RED);
             rankLabel.setText("");
             seasonWinrateLabel.setText("");
             seasonGamePlayed.setText("");
+            rankImageView.setImage(null);
+            sumIconView.setImage(null);
         //summoner found
         } else {
             rankNodeLabel.setText("Rank profile");
             sumNameLabel.setText(sumName.toUpperCase());
             sumNameLabel.setTextFill(Color.BLACK);
             level.setText("level : " + OriannaHandler.levelToString(sumName,regionString));
+            level.setTextFill(Color.BLACK);
             rankLabel.setText("rank : " + OriannaHandler.getRank(sumName, regionString));
             seasonGamePlayed.setText("season games played : " + OriannaHandler.getSeasonGamesPlayed(sumName, regionString));
             seasonWinrateLabel.setText("season winrate : " + OriannaHandler.getSeasonWinrate(sumName, regionString));
@@ -180,6 +188,7 @@ public class Main extends Application {
             try {
                 rankImageView.setImage(new Image(OriannaHandler.rankIcon(sumName, regionString)));
             } catch (NullPointerException e) {
+                rankImageView.setImage(null);
                 return;
             }
         }

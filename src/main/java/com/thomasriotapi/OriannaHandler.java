@@ -116,6 +116,15 @@ public class OriannaHandler {
         return s;
     }
 
+    public static int [] getMasteryLevel (String sumName, String regionString) {
+        Region region = stringToRegion(regionString);
+        Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+        //parsing
+        getMostMasteryChampionObject(summoner);
+    }
+
+    public static String [] get
+
     //private methods
     private static Region stringToRegion(String regionString) {
         Region region = switch (regionString) {
@@ -131,5 +140,14 @@ public class OriannaHandler {
             default -> null;
         };
         return region;
+    }
+
+    private static Object [] getMostMasteryChampionObject(Summoner sum) {
+        Object [] mostMastery = new Object[3];
+        Object [] allChampions = sum.getChampionMasteries().toArray();
+        for (int i = 0; i<3; i++) {
+            mostMastery[i] = allChampions[i];
+        }
+        return mostMastery;
     }
 }
