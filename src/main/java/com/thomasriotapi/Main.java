@@ -37,6 +37,13 @@ public class Main extends Application {
     private ImageView rankImageView;
     private Label rankLabel;
     private Label seasonGamePlayed;
+    private Label champ1MastScore;
+    private Label champ2MastScore;
+    private Label champ3MastScore;
+    private Label champ1Name;
+    private Label champ2Name;
+    private Label champ3Name;
+    private Label champNodeLabel;
 
     //riot variables
     String sumName;
@@ -44,7 +51,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        //SEARCH LAYER NODE
+        //SEARCH LAYER
         HBox searchLayer = new HBox();
         searchLayer.setSpacing(10);
         searchLayer.setAlignment(Pos.TOP_CENTER);
@@ -57,10 +64,17 @@ public class Main extends Application {
         searchLayer.getChildren().addAll(regionMenu, sumNameField, submitButton);
 
         //title layer
-        /*HBox rankTitle = new HBox();
-        rankTitle.getChildren().addAll();*/
+        HBox rankTitle = new HBox();
+        rankTitle.setAlignment(Pos.TOP_CENTER);
+        rankTitle.setSpacing(10);
+        rankTitle.setPadding(insets);
+        rankNodeLabel = new Label();
+        rankNodeLabel.setAlignment(Pos.CENTER_LEFT);
+        rankNodeLabel.setFont(new Font("Consolas", 13));
+        rankNodeLabel.setStyle("-fx-font-weight: bold");
+        rankTitle.getChildren().addAll(rankNodeLabel);
 
-        //RANK INFO LAYER NODE
+        //RANK INFO LAYER
         HBox rankInfoLayer = new HBox();
         rankInfoLayer.setSpacing(30);
         rankInfoLayer.setAlignment(Pos.TOP_CENTER);
@@ -70,13 +84,9 @@ public class Main extends Application {
         winrateLayer.setSpacing(10);
         winrateLayer.setAlignment(Pos.CENTER_LEFT);
         winrateLayer.setPadding(insets);
-        rankNodeLabel = new Label();
-        rankNodeLabel.setAlignment(Pos.TOP_LEFT);
-        rankNodeLabel.setFont(new Font("Consolas", 13));
-        rankNodeLabel.setStyle("-fx-font-weight: bold");
         seasonWinrateLabel = new Label();
         monthWinrateLabel = new Label();
-        winrateLayer.getChildren().addAll(rankNodeLabel, seasonWinrateLabel, monthWinrateLabel);
+        winrateLayer.getChildren().addAll(seasonWinrateLabel, monthWinrateLabel);
 
         //middle summoner info layer
         VBox middleLayer = new VBox();
@@ -111,16 +121,54 @@ public class Main extends Application {
         gamesPlayedLayer.setPadding(insets);
         seasonGamePlayed = new Label();
         Label monthGamePlayed = new Label();
-        gamesPlayedLayer.getChildren().addAll(emptyLabel, seasonGamePlayed, monthGamePlayed);
+        gamesPlayedLayer.getChildren().addAll(seasonGamePlayed, monthGamePlayed);
 
         rankInfoLayer.getChildren().addAll(winrateLayer, middleLayer, gamesPlayedLayer);
 
+        //title layer
+        HBox champTitle = new HBox();
+        champTitle.setAlignment(Pos.TOP_CENTER);
+        champTitle.setSpacing(10);
+        champTitle.setPadding(insets);
+        champNodeLabel = new Label();
+        champNodeLabel.setAlignment(Pos.CENTER_LEFT);
+        champNodeLabel.setFont(new Font("Consolas", 13));
+        champNodeLabel.setStyle("-fx-font-weight: bold");
+        champTitle.getChildren().addAll(champNodeLabel);
 
+        //CHAMPION INFO LAYER
+        HBox championInfoLayer = new HBox();
+        championInfoLayer.setSpacing(20);
+        championInfoLayer.setAlignment(Pos.CENTER);
+        championInfoLayer.setPadding(insets);
+        //Most masteries champ
+        VBox firstChampBox = new VBox();
+        firstChampBox.setSpacing(20);
+        firstChampBox.setAlignment(Pos.CENTER_LEFT);
+        firstChampBox.setPadding(insets);
+        champ1MastScore = new Label();
+        champ1Name= new Label();
 
-        //CHAMPION INFO LAYER NODE
-        VBox championInfoLayer = new VBox();
+        firstChampBox.getChildren().addAll(champ1Name, champ1MastScore);
+        //2nd most masteries champ
+        VBox secondChampBox = new VBox();
+        secondChampBox.setSpacing(20);
+        secondChampBox.setAlignment(Pos.CENTER);
+        secondChampBox.setPadding(insets);
+        champ2MastScore = new Label();
+        champ2Name= new Label();
 
-        championInfoLayer.getChildren().addAll();
+        secondChampBox.getChildren().addAll(champ2Name, champ2MastScore);
+        //3rd most mastery champ
+        VBox thirdChampBox = new VBox();
+        thirdChampBox.setSpacing(20);
+        thirdChampBox.setAlignment(Pos.CENTER_RIGHT);
+        thirdChampBox.setPadding(insets);
+        champ3MastScore = new Label();
+        champ3Name= new Label();
+
+        thirdChampBox.getChildren().addAll(champ3Name, champ3MastScore);
+        championInfoLayer.getChildren().addAll(firstChampBox,secondChampBox,thirdChampBox);
 
 
 
@@ -146,7 +194,7 @@ public class Main extends Application {
 
         //ROOT NODE
         VBox root = new VBox();
-        root.getChildren().addAll(searchLayer, rankInfoLayer, championInfoLayer);
+        root.getChildren().addAll(searchLayer, rankTitle, rankInfoLayer, champTitle, championInfoLayer);
 
 
 
@@ -162,9 +210,11 @@ public class Main extends Application {
 
     public void loadSummonerData(String sumName, String regionString) {
         String id = OriannaHandler.getId(sumName,regionString);
+
         //no summoner found
         if (id == null || id.equals("")) {
             rankNodeLabel.setText("");
+            champNodeLabel.setText("");
             sumNameLabel.setText("No summoner found");
             sumNameLabel.setTextFill(Color.RED);
             level.setText("Enter summoner name and region");
@@ -174,9 +224,12 @@ public class Main extends Application {
             seasonGamePlayed.setText("");
             rankImageView.setImage(null);
             sumIconView.setImage(null);
+
         //summoner found
         } else {
+
             rankNodeLabel.setText("Rank profile");
+            champNodeLabel.setText("Champions profile");
             sumNameLabel.setText(sumName.toUpperCase());
             sumNameLabel.setTextFill(Color.BLACK);
             level.setText("level : " + OriannaHandler.levelToString(sumName,regionString));
@@ -189,8 +242,13 @@ public class Main extends Application {
                 rankImageView.setImage(new Image(OriannaHandler.rankIcon(sumName, regionString)));
             } catch (NullPointerException e) {
                 rankImageView.setImage(null);
-                return;
             }
+            champ1MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[0].toString());
+            champ2MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[1].toString());
+            champ3MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[2].toString());
+            champ1Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[0].toString());
+            champ2Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[1].toString());
+            champ3Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[2].toString());
         }
     }
 

@@ -5,12 +5,18 @@ import com.merakianalytics.orianna.types.common.Division;
 import com.merakianalytics.orianna.types.common.Queue;
 import com.merakianalytics.orianna.types.common.Region;
 import com.merakianalytics.orianna.types.common.Tier;
-import com.merakianalytics.orianna.types.core.staticdata.Image;
+import com.merakianalytics.orianna.types.core.staticdata.Champion;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.util.Arrays;
 
 public class OriannaHandler {
 
-    final static String API_KEY = "RGAPI-6d022163-280d-4b18-80de-5d1c6c37e534";
+    final static String API_KEY = "RGAPI-30860c17-f3da-4001-a5e9-266156b04245";
 
     //public methods
     public static String getId(String sumName, String regionString) {
@@ -78,8 +84,13 @@ public class OriannaHandler {
             float wins = summoner.getLeaguePosition(Queue.RANKED_SOLO).getWins();
             float losses = summoner.getLeaguePosition(Queue.RANKED_SOLO).getLosses();
             float wrInt = wins/(wins+losses)*100;
-            wr = ("" + wrInt).substring(0,5) + " %";
+            if (("" + wrInt).length() >= 5) {
+                wr = ("" + wrInt).substring(0,5) + " %";
+            } else {
+                wr = "" + wrInt + " %";
+            }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return wr;
         }
         return wr;
@@ -116,17 +127,73 @@ public class OriannaHandler {
         return s;
     }
 
-    public static int [] getMasteryLevel (String sumName, String regionString) {
+    //retourne un tableau[3] avec le masteryLevel (Object) des 3 champions avec le plus de masteries
+    public static Object [] getMasteryLevel (String sumName, String regionString) {
         Region region = stringToRegion(regionString);
         Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+        Object [] champMasteryLevel = new Object[3];
         //parsing
-        getMostMasteryChampionObject(summoner);
+        try {
+            JSONArray champArray = (JSONArray) new JSONParser().parse(Arrays.toString(getMostMasteryChampionObject(summoner)));
+            for (int i =0; i<3;i++) {
+                champMasteryLevel[i] = getJSONValue(champArray, i, "level");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return champMasteryLevel;
     }
 
-    public static String [] get
+    //retourne un tableau[3] avec le mastery score (Object) des 3 champions avec le plus de masteries
+    public static Object[] getMasteriesPoints(String sumName, String regionString) {
+        Region region = stringToRegion(regionString);
+        Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+        Object [] champMasteries = new Object[3];
+        //parsing
+        try {
+            JSONArray champArray = (JSONArray) new JSONParser().parse(Arrays.toString(getMostMasteryChampionObject(summoner)));
+            for (int i =0; i<3;i++) {
+                champMasteries[i] = getJSONValue(champArray, i, "points");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return champMasteries;
+    }
 
-    //private methods
-    private static Region stringToRegion(String regionString) {
+    public static String[] getNamesFromIds(String sumName, String regionString) {
+        Region region = stringToRegion(regionString);
+        Summoner summoner = Summoner.named(sumName).withRegion(region).get();
+        Object[] ids = getMasteryChampIds(summoner);
+        String[] champNames = new String[3];
+        for (int i = 0;i<3;i++) {
+            Champion champ = Champion.withId(ids[i].hashCode()).withRegion(Region.NORTH_AMERICA).get();
+            champNames[i] = champ.getName();
+        }
+        return champNames;
+    }
+
+
+    //PRIVATE METHODS
+
+    //retourne un tableau[3] avec le **(nom/id)** (Object) des 3 champions avec le plus de masteries
+    protected static Object[] getMasteryChampIds(Summoner summoner) {
+        Object [] champIds = new Object[3];
+        //parsing
+        try {
+            JSONArray champArray = (JSONArray) new JSONParser().parse(Arrays.toString(getMostMasteryChampionObject(summoner)));
+            for (int i =0; i<3;i++) {
+                champIds[i] = getJSONValue(champArray, i, "championId");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return champIds;
+    }
+    protected static Region stringToRegion(String regionString) {
         Region region = switch (regionString) {
             case "NA" -> Region.NORTH_AMERICA;
             case "KR" -> Region.KOREA;
@@ -142,12 +209,18 @@ public class OriannaHandler {
         return region;
     }
 
-    private static Object [] getMostMasteryChampionObject(Summoner sum) {
+    protected static Object [] getMostMasteryChampionObject(Summoner sum) {
         Object [] mostMastery = new Object[3];
         Object [] allChampions = sum.getChampionMasteries().toArray();
         for (int i = 0; i<3; i++) {
             mostMastery[i] = allChampions[i];
         }
         return mostMastery;
+    }
+
+    protected static Object getJSONValue(JSONArray array, int index, String keyword) {
+        JSONObject champ = (JSONObject) array.get(index);
+        Object value = champ.get(keyword);
+        return value;
     }
 }
