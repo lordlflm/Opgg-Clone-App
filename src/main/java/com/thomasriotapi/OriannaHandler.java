@@ -91,7 +91,6 @@ public class OriannaHandler {
                 wr = "" + wrInt + " %";
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return wr;
         }
         return wr;
@@ -164,6 +163,7 @@ public class OriannaHandler {
         return champMasteries;
     }
 
+    //retourne un tableau[3] avec les noms (String) des 3 champions avec le plus de masteries
     public static String[] getNamesFromIds(String sumName, String regionString) {
         Region region = stringToRegion(regionString);
         Summoner summoner = Summoner.named(sumName).withRegion(region).get();
@@ -176,7 +176,7 @@ public class OriannaHandler {
         return champNames;
     }
 
-    //retourne un tableau[3] avec le **(nom/id)** (Object) des 3 champions avec le plus de masteries
+    //retourne un tableau[3] avec le id (Object) des 3 champions avec le plus de masteries
     public static Object[] getMasteryChampIds(String sumName, String regionString) {
         Region region = stringToRegion(regionString);
         Summoner summoner = Summoner.named(sumName).withRegion(region).get();

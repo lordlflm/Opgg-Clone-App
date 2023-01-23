@@ -218,7 +218,7 @@ public class Main extends Application {
         //constants
         final String SCENE_TITLE = "League of Legends Java Companion";
         stage.setTitle(SCENE_TITLE); //window title
-        //Image appIcon = new Image("some icon path");
+        stage.getIcons().add(new Image("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/hextech-images/chest_130.png"));
         stage.setScene(scene);
         stage.show();
     }
@@ -265,9 +265,9 @@ public class Main extends Application {
             }
 
             //champions profile
-            champ1MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[0].toString());
-            champ2MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[1].toString());
-            champ3MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[2].toString());
+            champ1MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[0].toString() + " points");
+            champ2MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[1].toString() + " points");
+            champ3MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[2].toString() + " points");
             champ1Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[0]);
             champ2Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[1]);
             champ3Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[2]);
