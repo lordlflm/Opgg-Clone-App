@@ -19,22 +19,13 @@ import static com.thomasriotapi.OriannaHandler.*;
 
 public class TestingOrianna {
     public static void main(String[] args) {
-        Orianna.setRiotAPIKey("RGAPI-30860c17-f3da-4001-a5e9-266156b04245");
+        Orianna.setRiotAPIKey("RGAPI-172a12b2-57fe-4992-b6cd-d183e77c4faa");
         Summoner sum = Summoner.named("tf blade").withRegion(Region.NORTH_AMERICA).get();
-        //
+
         //***this should work for match history//MatchHistory mh = MatchHistory.forSummoner(sum).withQueues(Queue.RANKED_SOLO).withSeasons(Season.getLatest()).get();
 
-        /*Object [] b = new Object[3];
-        Object [] a = sum.getChampionMasteries().toArray();
-        for (int i = 0; i<3; i++) {
-            b[i] = a[i];
-        }
-        OriannaHandler.getMasteriesPoints("lordofallganjas", "NA");
-        System.out.println(sum.getChampionMasteries().get(0));*/
-        //System.out.println(Arrays.toString(champMasteries));
-        Object[] l = getMostMasteryChampionObject(sum);
-        System.out.println(Arrays.toString(l));
-        //System.out.println(getNamesFromIds("lordofallganjas", "NA"));
+        String icon = Champion.withId(2).withRegion(Region.NORTH_AMERICA).get().getImage().toString();
+        System.out.println(icon);
 
     }
 

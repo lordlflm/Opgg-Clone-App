@@ -8,9 +8,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -44,6 +42,11 @@ public class Main extends Application {
     private Label champ2Name;
     private Label champ3Name;
     private Label champNodeLabel;
+    private ImageView champ1icon;
+    private ImageView champ2icon;
+    private ImageView champ3icon;
+    private HBox champTitle;
+    private HBox rankTitle;
 
     //riot variables
     String sumName;
@@ -64,7 +67,7 @@ public class Main extends Application {
         searchLayer.getChildren().addAll(regionMenu, sumNameField, submitButton);
 
         //title layer
-        HBox rankTitle = new HBox();
+        rankTitle = new HBox();
         rankTitle.setAlignment(Pos.TOP_CENTER);
         rankTitle.setSpacing(10);
         rankTitle.setPadding(insets);
@@ -126,7 +129,7 @@ public class Main extends Application {
         rankInfoLayer.getChildren().addAll(winrateLayer, middleLayer, gamesPlayedLayer);
 
         //title layer
-        HBox champTitle = new HBox();
+        champTitle = new HBox();
         champTitle.setAlignment(Pos.TOP_CENTER);
         champTitle.setSpacing(10);
         champTitle.setPadding(insets);
@@ -147,27 +150,42 @@ public class Main extends Application {
         firstChampBox.setAlignment(Pos.CENTER_LEFT);
         firstChampBox.setPadding(insets);
         champ1MastScore = new Label();
-        champ1Name= new Label();
+        champ1MastScore.setAlignment(Pos.CENTER);
+        champ1Name = new Label();
+        champ1Name.setAlignment(Pos.CENTER);
+        champ1icon = new ImageView();
+        champ1icon.setFitHeight(60);
+        champ1icon.setFitWidth(60);
 
-        firstChampBox.getChildren().addAll(champ1Name, champ1MastScore);
+        firstChampBox.getChildren().addAll(champ1Name, champ1icon, champ1MastScore);
         //2nd most masteries champ
         VBox secondChampBox = new VBox();
         secondChampBox.setSpacing(20);
-        secondChampBox.setAlignment(Pos.CENTER);
+        secondChampBox.setAlignment(Pos.CENTER_LEFT);
         secondChampBox.setPadding(insets);
         champ2MastScore = new Label();
+        champ2MastScore.setAlignment(Pos.CENTER);
         champ2Name= new Label();
+        champ2Name.setAlignment(Pos.CENTER);
+        champ2icon = new ImageView();
+        champ2icon.setFitHeight(60);
+        champ2icon.setFitWidth(60);
 
-        secondChampBox.getChildren().addAll(champ2Name, champ2MastScore);
+        secondChampBox.getChildren().addAll(champ2Name, champ2icon, champ2MastScore);
         //3rd most mastery champ
         VBox thirdChampBox = new VBox();
         thirdChampBox.setSpacing(20);
-        thirdChampBox.setAlignment(Pos.CENTER_RIGHT);
+        thirdChampBox.setAlignment(Pos.CENTER_LEFT);
         thirdChampBox.setPadding(insets);
         champ3MastScore = new Label();
+        champ3MastScore.setAlignment(Pos.CENTER);
         champ3Name= new Label();
+        champ3Name.setAlignment(Pos.CENTER);
+        champ3icon = new ImageView();
+        champ3icon.setFitHeight(60);
+        champ3icon.setFitWidth(60);
+        thirdChampBox.getChildren().addAll(champ3Name, champ3icon, champ3MastScore);
 
-        thirdChampBox.getChildren().addAll(champ3Name, champ3MastScore);
         championInfoLayer.getChildren().addAll(firstChampBox,secondChampBox,thirdChampBox);
 
 
@@ -190,16 +208,13 @@ public class Main extends Application {
             }
         });
 
-
-
         //ROOT NODE
         VBox root = new VBox();
         root.getChildren().addAll(searchLayer, rankTitle, rankInfoLayer, champTitle, championInfoLayer);
 
-
-
         //SCENE SETUP
         Scene scene = new Scene(root,600,600);
+        root.setBackground(new Background(new BackgroundFill(Color.rgb(182,212,219),null,null)));
         //constants
         final String SCENE_TITLE = "League of Legends Java Companion";
         stage.setTitle(SCENE_TITLE); //window title
@@ -214,6 +229,8 @@ public class Main extends Application {
         //no summoner found
         if (id == null || id.equals("")) {
             rankNodeLabel.setText("");
+            rankTitle.setBackground(null);
+            champTitle.setBackground(null);
             champNodeLabel.setText("");
             sumNameLabel.setText("No summoner found");
             sumNameLabel.setTextFill(Color.RED);
@@ -228,8 +245,11 @@ public class Main extends Application {
         //summoner found
         } else {
 
+            //summoner profile
             rankNodeLabel.setText("Rank profile");
+            rankTitle.setBackground(new Background(new BackgroundFill(Color.GREY,null,null)));
             champNodeLabel.setText("Champions profile");
+            champTitle.setBackground(new Background(new BackgroundFill(Color.GREY,null,null)));
             sumNameLabel.setText(sumName.toUpperCase());
             sumNameLabel.setTextFill(Color.BLACK);
             level.setText("level : " + OriannaHandler.levelToString(sumName,regionString));
@@ -243,12 +263,21 @@ public class Main extends Application {
             } catch (NullPointerException e) {
                 rankImageView.setImage(null);
             }
+
+            //champions profile
             champ1MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[0].toString());
             champ2MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[1].toString());
             champ3MastScore.setText("score : " + OriannaHandler.getMasteriesPoints(sumName,regionString)[2].toString());
-            champ1Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[0].toString());
-            champ2Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[1].toString());
-            champ3Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[2].toString());
+            champ1Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[0]);
+            champ2Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[1]);
+            champ3Name.setText(OriannaHandler.getNamesFromIds(sumName,regionString)[2]);
+            champ1icon.setImage(new Image("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/"
+                    + OriannaHandler.getMasteryChampIds(sumName,regionString)[0].toString() + ".png"));
+            champ2icon.setImage(new Image("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/"
+                    + OriannaHandler.getMasteryChampIds(sumName,regionString)[1].toString() + ".png"));
+            champ3icon.setImage(new Image("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/"
+                    + OriannaHandler.getMasteryChampIds(sumName,regionString)[2].toString() + ".png"));
+
         }
     }
 

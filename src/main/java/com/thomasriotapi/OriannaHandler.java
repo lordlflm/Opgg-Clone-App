@@ -16,9 +16,10 @@ import java.util.Arrays;
 
 public class OriannaHandler {
 
-    final static String API_KEY = "RGAPI-30860c17-f3da-4001-a5e9-266156b04245";
+    final static String API_KEY = "RGAPI-172a12b2-57fe-4992-b6cd-d183e77c4faa";
 
     //public methods
+
     public static String getId(String sumName, String regionString) {
         Orianna.setRiotAPIKey(API_KEY);
 
@@ -166,7 +167,7 @@ public class OriannaHandler {
     public static String[] getNamesFromIds(String sumName, String regionString) {
         Region region = stringToRegion(regionString);
         Summoner summoner = Summoner.named(sumName).withRegion(region).get();
-        Object[] ids = getMasteryChampIds(summoner);
+        Object[] ids = getMasteryChampIds(sumName,regionString);
         String[] champNames = new String[3];
         for (int i = 0;i<3;i++) {
             Champion champ = Champion.withId(ids[i].hashCode()).withRegion(Region.NORTH_AMERICA).get();
@@ -175,11 +176,10 @@ public class OriannaHandler {
         return champNames;
     }
 
-
-    //PRIVATE METHODS
-
     //retourne un tableau[3] avec le **(nom/id)** (Object) des 3 champions avec le plus de masteries
-    protected static Object[] getMasteryChampIds(Summoner summoner) {
+    public static Object[] getMasteryChampIds(String sumName, String regionString) {
+        Region region = stringToRegion(regionString);
+        Summoner summoner = Summoner.named(sumName).withRegion(region).get();
         Object [] champIds = new Object[3];
         //parsing
         try {
@@ -193,6 +193,8 @@ public class OriannaHandler {
         }
         return champIds;
     }
+
+    //PRIVATE METHODS
     protected static Region stringToRegion(String regionString) {
         Region region = switch (regionString) {
             case "NA" -> Region.NORTH_AMERICA;
