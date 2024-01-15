@@ -1,4 +1,4 @@
-package com.thomasriotapi;
+package com.lflm.opggcloneapp;
 
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Division;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public class OriannaHandler {
 
-    final static String API_KEY = "RGAPI-172a12b2-57fe-4992-b6cd-d183e77c4faa";
+    final static String API_KEY = "RGAPI-6b6f541f-b81c-4dd6-8d8b-30976bd07e49";
 
     //public methods
 

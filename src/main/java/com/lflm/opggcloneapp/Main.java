@@ -1,4 +1,4 @@
-package com.thomasriotapi;
+package com.lflm.opggcloneapp;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
-import javax.sound.sampled.Clip;
 
 public class Main extends Application {
 
